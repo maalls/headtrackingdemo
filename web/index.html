@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>HTML 5</title>
+<!--[if IE]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  
+  <link rel="stylesheet" href="css/foundation.min.css" />
+ 
+</head>
+<body>
+<style>
+  
+  body { margin: 0px;}
+
+  #drawingCanvas {
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 320px;
+    height: 240px;
+  
+  }
+  #targetCanvas {
+
+    border: 1px solid blue;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 320px;
+    height: 240px;
+  
+
+  }
+</style>
+<script src="js/headtrackr.js"></script>
+<script src="js/three.min.js"></script>
+
+<canvas id="inputCanvas" width="320" height="240" style="display:none"></canvas>
+<video id="inputVideo" autoplay loop width="320" height="240"></video>
+<canvas id="drawingCanvas" width="320" height="240"></canvas>
+
+<canvas id="targetCanvas" width="320" height="240"></canvas>
+<script type="text/javascript">
+  var videoInput = document.getElementById('inputVideo');
+  var canvasInput = document.getElementById('inputCanvas');
+
+  var htracker = new headtrackr.Tracker();
+  htracker.init(videoInput, canvasInput);
+  htracker.start();
+  
+  var c=document.getElementById("drawingCanvas");
+  var ctx=c.getContext("2d");
+
+  var tc = document.getElementById("targetCanvas").getContext("2d");
+
+  var sourceCanvas = document.getElementById("inputVideo");
+
+  document.addEventListener("facetrackingEvent", function(event) {
+
+    ctx.clearRect (0,0, 320, 240);
+    ctx.beginPath();
+    ctx.lineWidth="2";
+    ctx.strokeStyle="red";
+    ctx.rect(event.x - event.width/2, event.y - event.height/2, event.width, event.height);
+    ctx.stroke();
+
+    tc.clearRect (0,0, 320, 240);
+    tc.drawImage(sourceCanvas, (event.x - event.width/2)*2, (event.y - event.height/2)*2, event.width * 2, event.height * 2, 0, 0, event.width, event.height);
+
+
+  });
+
+  
+</script>
+
+</body>
+</html>
